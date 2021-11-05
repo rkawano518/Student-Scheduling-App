@@ -15,5 +15,11 @@ class MainActivity : AppCompatActivity() {
             intent = Intent(this, CalendarActivity::class.java)
             startActivity(intent)
         }
+
+        //Calendar button
+        findViewById<Button>(R.id.bGrade).setOnClickListener() {
+            intent = Intent(this, GradeActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
