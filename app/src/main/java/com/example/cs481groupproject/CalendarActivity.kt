@@ -1,8 +1,10 @@
 package com.example.cs481groupproject
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.CalendarView
 import android.widget.TextView
 import org.w3c.dom.Text
@@ -13,6 +15,12 @@ class CalendarActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
+
+        //Back button
+        findViewById<Button>(R.id.backButtonCalendar).setOnClickListener(){
+            intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
 
         //Display date
         val dateText = findViewById<TextView>(R.id.dateText)
