@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class calendarEvent(
-    @PrimaryKey val date: Int,
-    @ColumnInfo(name = "first_name") val firstName: String?,
-    @ColumnInfo(name = "last_name") val lastName: String?
+    @PrimaryKey val date: String,
+    @ColumnInfo(name = "calendar_event") val event: String
 )

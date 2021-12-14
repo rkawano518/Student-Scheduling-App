@@ -1,8 +1,6 @@
 package com.example.cs481groupproject.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface calendarInterface {
@@ -11,6 +9,11 @@ interface calendarInterface {
     fun getAll(): List<calendarEvent>
 
     //Insert
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(vararg events: calendarEvent)
+    //fun insert(event: calendarEvent)
+
+    //Delete
+    @Query("DELETE FROM calendarEvent WHERE calendar_event = :event")
+    fun deleteByEvent(event: String)
 }

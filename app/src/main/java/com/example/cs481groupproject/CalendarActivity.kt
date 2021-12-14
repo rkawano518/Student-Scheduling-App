@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.CalendarView
 import android.widget.TextView
+import androidx.core.view.get
 import androidx.room.Room
 import com.example.cs481groupproject.database.calendarDatabase
 import com.example.cs481groupproject.database.calendarEvent
@@ -42,25 +43,65 @@ class CalendarActivity : AppCompatActivity() {
         //Build database
         val db = Room.databaseBuilder(
             applicationContext,
-            calendarDatabase::class.java, "database-name"
+            calendarDatabase::class.java, "database-name.db"
         )   .allowMainThreadQueries()
             .build()
 
-
-
         val calendarDao = db.calendarInterface()
-        val c1 = calendarEvent(23, "John", "Jones")
-        val c2 = calendarEvent(25, "Peter", "Griffin")
-        //calendarDao.insertAll(c2, c1)
-        //val cEvents: List<calendarEvent> =  calendarDao.getAll()
+        val c1 = calendarEvent("12/21/2021", "Homework 1")
+        val c2 = calendarEvent("12/22/2021", "Exam 2")
 
-        //Log.d("Test1", "test1")
-
-        //println("hello")
-
-        calendarView.setOnDateChangeListener() { calendarView: CalendarView, i: Int, i1: Int, i2: Int ->
-
-            scheduled.setText("dfd")
+        findViewById<Button>(R.id.bAddItem).setOnClickListener(){
+            calendarDao.insertAll(c2, c1)
         }
+
+        var cEvents: List<calendarEvent> =  calendarDao.getAll()
+
+        findViewById<Button>(R.id.bPrintEvents).setOnClickListener(){
+            println(cEvents)
+            println("Date:" + calendarView.date.toString())
+        }
+        //println("Date:" + calendarView.date.toString())
+
+        calendarView.setOnDateChangeListener(object : CalendarView.OnDateChangeListener {
+            override fun onSelectedDayChange(
+                view: CalendarView,
+                year: Int,
+                month: Int,
+                dayOfMonth: Int
+            ) {
+                cEvents = calendarDao.getAll() //Get events
+                val eventsIterator = cEvents.iterator() //Iterators
+                val selectedDate = ((month + 1).toString() + "/" + dayOfMonth.toString() + "/" + year.toString())//Selected date as a value
+                println("Selected Date: " + selectedDate)
+                /*while(eventsIterator.hasNext()){
+                    if(eventsIterator.next().date == selectedDate){
+                        println("Event: " + eventsIterator.next().event)
+                    }
+                    //println(eventsIterator.next())
+                }*/
+
+                //Loop through events list
+                for(v in cEvents){
+                    //If the date matches
+                    if(v.date == selectedDate){
+                        //Print event in text box and end loop
+                        scheduled.setText("Items on " + selectedDate + ": " + v.event)
+                        break
+                    }
+                    //Print no events in text box
+                    else{
+                        scheduled.setText("No items scheduled")
+                    }
+                }
+                //println("Date: " + (month + 1)+ "/" + dayOfMonth + "/" + year)
+                //this.calendar = GregorianCalendar(year, month, dayOfMonth)
+            } //met
+        })
+
+        /*calendarView.setOnDateChangeListener() { calendarView: CalendarView, i: Int, i1: Int, i2: Int ->
+            println("Date #2 " + calendarView.date
+            scheduled.setText(cEvents.toString())
+        }*/
     }
 }
