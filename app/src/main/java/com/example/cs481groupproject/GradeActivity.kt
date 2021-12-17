@@ -4,6 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.CalendarView
+import android.widget.TextView
+import androidx.room.Room
+import com.example.cs481groupproject.database.calendarDatabase
+import com.example.cs481groupproject.database.calendarEvent
+import java.text.SimpleDateFormat
 import java.util.*
 
 class GradeActivity : AppCompatActivity() {
@@ -12,41 +18,7 @@ class GradeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_grade)
 
         //Back button
-        findViewById<Button>(R.id.button3).setOnClickListener{
-            //array of subjects Names
-            val subjectName = arrayOf<String>("","English","Physics","Chemistry","Maths")
-
-            //Input Stream
-            val scanner = Scanner(System.`in`)
-
-            //Declare Array to Contain Subjects marks
-            val marksArray = DoubleArray(5)
-
-            //Start Input Subjects Marks
-            println("Input Marks->")
-            for(i in marksArray.indices){
-                print("${subjectName[i]} : ")
-                marksArray[i] = scanner.nextDouble()
-            }
-
-            //Calculate Total Marks in All Subjects
-            val total = marksArray.sum()
-
-            //Calculate Percentage
-            val percentage = marksArray.average()
-
-            //Print Total and Percentage
-            println("Total of All subjects Marks : $total")
-            println("Percentage : $percentage")
-
-
-            //To find out Grade based on Percentage
-            when{
-                percentage>80 -> println("Grade : A")
-                percentage>60 -> println("Grade : B")
-                percentage>40 -> println("Grade : C")
-                else -> println("Grade : D")
-            }
+        findViewById<Button>(R.id.button3).setOnClickListener {
 
         }
         findViewById<Button>(R.id.backButtonGrade).setOnClickListener {
@@ -54,5 +26,34 @@ class GradeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-    }
-}
+        findViewById<Button>(R.id.button5).setOnClickListener {
+
+
+            class Student(
+                val name: String,
+                val gpa: Double,
+                val semester: String,
+                val estimatedGraduationYear: Int
+            ) {
+
+                init {
+                    println("$name has ${estimatedGraduationYear - 2020} years left in college.")
+                }
+
+                // Member Function
+                fun calculateLetterGrade(): String {
+                    return when {
+                        gpa >= 3.0 -> "A"
+                        gpa >= 2.7 -> "B"
+                        gpa >= 1.7 -> "C"
+                        gpa >= 1.0 -> "D"
+                        else -> "E"
+                    }
+                }
+            }
+
+        fun main() {
+            var student =
+                Student("Alex", 3.95, "Fall", 2022) // Prints: Alex has 0 years left in college.
+            println("${student.name}'s letter grade is ${student.calculateLetterGrade()}.") // Prints: Alex's letter grade is A.
+        }}}
