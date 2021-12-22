@@ -8,12 +8,12 @@ interface calendarInterface {
     @Query("SELECT * FROM calendarEvent")
     fun getAll(): List<calendarEvent>
 
-    //Insert
+    //Inserts events into database
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(vararg events: calendarEvent)
     //fun insert(event: calendarEvent)
 
-    //Delete
+    //Delete events from database
     @Query("DELETE FROM calendarEvent WHERE calendar_event = :event")
     fun deleteByEvent(event: String)
 }

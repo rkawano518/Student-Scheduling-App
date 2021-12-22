@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CS481GroupProject">
         <activity
+            android:name=".AddActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity3"
             android:exported="false" />
         <activity

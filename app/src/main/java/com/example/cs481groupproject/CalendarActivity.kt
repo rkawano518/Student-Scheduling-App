@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.CalendarView
+import android.widget.EditText
 import android.widget.TextView
 import androidx.core.view.get
 import androidx.room.Room
@@ -27,7 +28,7 @@ class CalendarActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        //Display date
+        //Display current date
         val dateText = findViewById<TextView>(R.id.dateText)
         val date = SimpleDateFormat("M/dd/yyyy")
         val currentDate = date.format(Date())
@@ -47,22 +48,37 @@ class CalendarActivity : AppCompatActivity() {
         )   .allowMainThreadQueries()
             .build()
 
+        //Dao
         val calendarDao = db.calendarInterface()
-        val c1 = calendarEvent("12/21/2021", "Homework 1")
-        val c2 = calendarEvent("12/22/2021", "Exam 2")
 
+        /***********************************
+         * End of database
+         **********************************/
+
+        //Add button
         findViewById<Button>(R.id.bAddItem).setOnClickListener(){
-            calendarDao.insertAll(c2, c1)
+            //Get values from text boxes
+            val date = findViewById<EditText>(R.id.dateEditText).text.toString()
+            val event = findViewById<EditText>(R.id.eventEditText).text.toString()
+
+            //Create entity from data
+            val e1 = calendarEvent(date, event)
+
+            //Add entity to database
+            calendarDao.insertAll(e1)
         }
 
+        //Delete button
+        findViewById<Button>(R.id.bRemoveItem).setOnClickListener(){
+            //Get values from text boxes (need only event)
+            val event = findViewById<EditText>(R.id.eventEditText).text.toString()
+
+            //Delete entity from database
+            calendarDao.deleteByEvent(event)
+        }
         var cEvents: List<calendarEvent> =  calendarDao.getAll()
 
-        findViewById<Button>(R.id.bPrintEvents).setOnClickListener(){
-            println(cEvents)
-            println("Date:" + calendarView.date.toString())
-        }
-        //println("Date:" + calendarView.date.toString())
-
+        //Calendar shows events on a selected date
         calendarView.setOnDateChangeListener(object : CalendarView.OnDateChangeListener {
             override fun onSelectedDayChange(
                 view: CalendarView,
@@ -70,16 +86,8 @@ class CalendarActivity : AppCompatActivity() {
                 month: Int,
                 dayOfMonth: Int
             ) {
-                cEvents = calendarDao.getAll() //Get events
-                val eventsIterator = cEvents.iterator() //Iterators
+                cEvents = calendarDao.getAll() //Get events into a list
                 val selectedDate = ((month + 1).toString() + "/" + dayOfMonth.toString() + "/" + year.toString())//Selected date as a value
-                println("Selected Date: " + selectedDate)
-                /*while(eventsIterator.hasNext()){
-                    if(eventsIterator.next().date == selectedDate){
-                        println("Event: " + eventsIterator.next().event)
-                    }
-                    //println(eventsIterator.next())
-                }*/
 
                 //Loop through events list
                 for(v in cEvents){
@@ -89,19 +97,13 @@ class CalendarActivity : AppCompatActivity() {
                         scheduled.setText("Items on " + selectedDate + ": " + v.event)
                         break
                     }
-                    //Print no events in text box
+                    //Date doesn't match
                     else{
+                        //Print message
                         scheduled.setText("No items scheduled")
                     }
                 }
-                //println("Date: " + (month + 1)+ "/" + dayOfMonth + "/" + year)
-                //this.calendar = GregorianCalendar(year, month, dayOfMonth)
-            } //met
+            }
         })
-
-        /*calendarView.setOnDateChangeListener() { calendarView: CalendarView, i: Int, i1: Int, i2: Int ->
-            println("Date #2 " + calendarView.date
-            scheduled.setText(cEvents.toString())
-        }*/
     }
 }
